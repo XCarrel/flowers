@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {Router} from '@angular/router';
+import {Flower} from '../model/Flower';
 
 @Component({
   selector: 'app-home',
@@ -9,9 +10,11 @@ import {Router} from '@angular/router';
 export class HomePage {
 
   private router
+  private flower: Flower
 
   constructor(router: Router) {
     this.router = router
+      this.flower=new Flower(1,['Prime','Vert'])
   }
 
   details() {
