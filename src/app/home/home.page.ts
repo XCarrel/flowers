@@ -20,7 +20,7 @@ export class HomePage {
     }
 
     showDetailsOf(id) {
-        this.router.navigateByUrl('/details')
+        this.router.navigateByUrl('/flower/'+id)
     }
 
 }
