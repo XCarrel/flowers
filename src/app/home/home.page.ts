@@ -1,24 +1,25 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {Flower} from '../model/Flower';
+import {DataProvider} from '../providers/data';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+    selector: 'app-home',
+    templateUrl: 'home.page.html',
+    styleUrls: ['home.page.scss'],
 })
 export class HomePage {
 
-  private router
-  private flower: Flower
+    private router
+    private data: DataProvider
 
-  constructor(router: Router) {
-    this.router = router
-      this.flower=new Flower(1,['Prime','Vert'])
-  }
+    constructor(router: Router) {
+        this.router = router
+        this.data = new DataProvider()
+    }
 
-  details() {
-    this.router.navigateByUrl('/details')
-  }
+    showDetailsOf(id) {
+        this.router.navigateByUrl('/details')
+    }
 
 }
