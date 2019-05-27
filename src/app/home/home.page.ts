@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {Flower} from '../model/Flower';
 import {DataProvider} from '../providers/data';
+import {Storage} from '@ionic/storage'
 
 @Component({
     selector: 'app-home',
@@ -13,9 +14,9 @@ export class HomePage {
     private router
     private data: DataProvider
 
-    constructor(router: Router) {
+    constructor(router: Router, storage:Storage) {
         this.router = router
-        this.data = new DataProvider()
+        this.data = new DataProvider(storage)
     }
 
     showDetailsOf(id) {

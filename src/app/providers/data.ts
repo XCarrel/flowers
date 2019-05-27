@@ -1,11 +1,26 @@
 import {Flower} from '../model/Flower';
+import {Storage} from '@ionic/storage'
 
 export class DataProvider {
 
     public flowers: Flower[]
+    private storage: Storage
 
-    constructor() {
-        this.init()
+    constructor(storage: Storage) {
+        this.storage = storage
+        //this.init()
+        this.loadFromStorage()
+    }
+
+    public loadFromStorage() {
+        this.flowers = []
+        this.storage.get('flowers').then((data) => {
+            data.forEach((value) => {
+                var f = new Flower(value.id, value.names)
+                f.size = value.size
+                this.flowers.push(f)
+            })
+        })
     }
 
     public init() { // Initialize storage with hardcoded data
@@ -22,6 +37,7 @@ export class DataProvider {
         f = new Flower(4,['Primula vulgaris', 'Primevère'])
         f.size = 7
         this.flowers.push(f)
+        this.storage.set('flowers',this.flowers)
     }
 
 }
