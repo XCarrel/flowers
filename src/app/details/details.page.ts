@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+import {Storage} from '@ionic/storage'
+import {DataProvider} from '../providers/data';
+import {Flower} from '../model/Flower';
 
 @Component({
     selector: 'app-details',
@@ -9,14 +12,20 @@ import {ActivatedRoute, Router} from '@angular/router';
 export class DetailsPage implements OnInit {
 
     private route: ActivatedRoute
-    public id: number
+    public data: DataProvider
+    public flower: Flower
 
-    constructor(activatedRoute: ActivatedRoute,) {
+    constructor(activatedRoute: ActivatedRoute, storage: Storage) {
         this.route = activatedRoute
+        this.data = new DataProvider(storage)
     }
 
     ngOnInit() {
-        this.id = +this.route.snapshot.paramMap.get('id')
+        var id = +this.route.snapshot.paramMap.get('id')
+        this.data.find(id).then((flower) => {
+            console.log(flower)
+            //this.flower = flower
+        })
     }
 
 }

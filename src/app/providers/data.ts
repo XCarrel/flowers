@@ -40,6 +40,16 @@ export class DataProvider {
         this.storage.set('flowers',this.flowers)
     }
 
+    public find(id)
+    {
+        return new Promise((resolve, reject) => {
+            this.flowers.forEach((flower) => {
+                if (flower.id == id) resolve(flower)
+            })
+            reject ('Flower #'+id+' not found')
+        })
+    }
+
 }
 
 
