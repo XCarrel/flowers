@@ -14,9 +14,9 @@ export class HomePage {
     private router
     private data: DataProvider
 
-    constructor(router: Router, storage:Storage) {
+    constructor(router: Router, data: DataProvider) {
         this.router = router
-        this.data = new DataProvider(storage)
+        this.data = data
     }
 
     showDetailsOf(id) {

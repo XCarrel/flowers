@@ -1,6 +1,9 @@
 import {Flower} from '../model/Flower';
 import {Storage} from '@ionic/storage'
+import {Promise} from 'es6-promise'
+import {Injectable} from '@angular/core';
 
+@Injectable()
 export class DataProvider {
 
     public flowers: Flower[]

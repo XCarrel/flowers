@@ -15,16 +15,16 @@ export class DetailsPage implements OnInit {
     public data: DataProvider
     public flower: Flower
 
-    constructor(activatedRoute: ActivatedRoute, storage: Storage) {
+    constructor(activatedRoute: ActivatedRoute, data: DataProvider) {
         this.route = activatedRoute
-        this.data = new DataProvider(storage)
+        this.data = data
+        this.flower = new Flower(0,[]);
     }
 
     ngOnInit() {
         var id = +this.route.snapshot.paramMap.get('id')
         this.data.find(id).then((flower) => {
-            console.log(flower)
-            //this.flower = flower
+            this.flower = flower
         })
     }
 
