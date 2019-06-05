@@ -3,13 +3,17 @@ import {Storage} from '@ionic/storage'
 import {Promise} from 'es6-promise'
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-
-const apiurl: string = 'http://mob1-apiserver/api/xcl'
+import {IonDatetime} from '@ionic/angular';
 
 @Injectable()
 export class DataProvider {
 
+    private apiurl: string = 'http://mob1-apiserver/api/xcl'
+
     public flowers: Flower[]
+    public lastUpdateTime: Date
+    public lastUpdateSuccess: boolean
+
     private storage: Storage
     private httpClient: HttpClient
     constructor(storage: Storage, httpClient: HttpClient) {
@@ -18,12 +22,16 @@ export class DataProvider {
         //this.init()
         this.loadFromAPI()
         this.loadFromStorage()
+        this.lastUpdateTime = new Date()
+        this.lastUpdateSuccess = false
     }
 
     public loadFromAPI() {
         this.httpClient.get(this.apiurl+'/flowers').subscribe(
             data => { // API is responding, let's do it
                 this.storage.set('flowers',data).then(() => {
+                    this.lastUpdateSuccess = true
+                    this.lastUpdateTime = new Date()
                     console.log ('data from API stored')
                 })
             },
@@ -33,11 +41,17 @@ export class DataProvider {
         )
     }
 
+    // Convert the json format stored in storage to array of Flower objects
     public loadFromStorage() {
         this.flowers = []
+        console.log('loadFromStorage')
         this.storage.get('flowers').then((data) => {
-            data.forEach((value) => {
-                var f = new Flower(value.id, value.names)
+            data.data.forEach((value) => {
+                var stringnames: string[] = []
+                value.names.forEach((objname) => {
+                    stringnames.push(objname.name)
+                })
+                var f = new Flower(value.id, stringnames)
                 f.size = value.size
                 this.flowers.push(f)
             })
