@@ -4,6 +4,7 @@ import {Storage} from '@ionic/storage'
 import {DataProvider} from '../providers/data';
 import {Flower} from '../model/Flower';
 import {HttpClient} from '@angular/common/http';
+import {ToastController} from '@ionic/angular';
 
 @Component({
     selector: 'app-details',
@@ -16,11 +17,13 @@ export class DetailsPage implements OnInit {
     public data: DataProvider
     public flower: Flower
     private httpClient: HttpClient
+    private toastCtrl: ToastController
 
-    constructor(activatedRoute: ActivatedRoute, data: DataProvider, httpClient: HttpClient) {
+    constructor(activatedRoute: ActivatedRoute, data: DataProvider, httpClient: HttpClient, toastCtrl: ToastController) {
         this.route = activatedRoute
         this.data = data
         this.httpClient = httpClient
+        this.toastCtrl = toastCtrl
         this.flower = new Flower(0, []);
     }
 
@@ -31,4 +34,12 @@ export class DetailsPage implements OnInit {
         })
     }
 
+    grow() { // the flower grows by 1 cm
+        this.flower.size++
+        this.data.updateItemOnBackend(this.flower.id).then(() => {
+            this.toastCtrl.create({ message: 'Enregistré!', duration: 1000 }).then((toastData)=>{ toastData.present() })
+        }).catch ((err) => {
+            this.toastCtrl.create({ message: 'Erreur lors de l\'enregistrement!', duration: 1000 }).then((toastData)=>{ toastData.present() })
+        })
+    }
 }

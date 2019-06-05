@@ -6,5 +6,6 @@
 </ion-header>
 
 <ion-content>
-  <div>{{ flower.getName(0) }}</div>
+  <p>Nous avons une {{ flower.getName(0) }} de {{ flower.size }}cm</p>
+  <ion-button (click)="grow()">Elle pousse</ion-button>
 </ion-content>

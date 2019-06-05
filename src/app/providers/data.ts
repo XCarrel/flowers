@@ -1,7 +1,7 @@
 import {Flower} from '../model/Flower';
 import {Storage} from '@ionic/storage'
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 @Injectable()
 export class DataProvider {
@@ -52,7 +52,7 @@ export class DataProvider {
 
     // Convert the json format stored in storage to array of Flower objects
     public loadFromStorage(): Promise<string> {
-        return new Promise<string>((resolve,reject) => {
+        return new Promise<string>((resolve, reject) => {
             this.flowers = []
             console.log('loadFromStorage')
             this.storage.get('flowers').then((data) => {
@@ -92,7 +92,7 @@ export class DataProvider {
     }
 
     public find(id) {
-        return new Promise((resolve, reject) => {
+        return new Promise<any>((resolve, reject) => {
             this.flowers.forEach((flower) => {
                 if (flower.id == id) resolve(flower)
             })
@@ -100,6 +100,21 @@ export class DataProvider {
         })
     }
 
+    public updateItemOnBackend(id): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            this.find(id).then((flower) => {
+                this.httpClient
+                    .put(this.apiurl + '/flowers/' + id, flower).subscribe(
+                    data => {
+                        resolve('Ok')
+                    },
+                    err => {
+                        reject('API call failed')
+                    }
+                )
+            })
+        })
+    }
 }
 
 
