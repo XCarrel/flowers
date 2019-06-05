@@ -2,17 +2,35 @@ import {Flower} from '../model/Flower';
 import {Storage} from '@ionic/storage'
 import {Promise} from 'es6-promise'
 import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+
+const apiurl: string = 'http://mob1-apiserver/api/xcl'
 
 @Injectable()
 export class DataProvider {
 
     public flowers: Flower[]
     private storage: Storage
-
-    constructor(storage: Storage) {
+    private httpClient: HttpClient
+    constructor(storage: Storage, httpClient: HttpClient) {
         this.storage = storage
+        this.httpClient = httpClient
         //this.init()
+        this.loadFromAPI()
         this.loadFromStorage()
+    }
+
+    public loadFromAPI() {
+        this.httpClient.get(this.apiurl+'/flowers').subscribe(
+            data => { // API is responding, let's do it
+                this.storage.set('flowers',data).then(() => {
+                    console.log ('data from API stored')
+                })
+            },
+            err => {
+                console.log('Load from API failed with error '+err)
+            }
+        )
     }
 
     public loadFromStorage() {

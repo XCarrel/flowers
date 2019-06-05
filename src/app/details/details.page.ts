@@ -31,14 +31,4 @@ export class DetailsPage implements OnInit {
         })
     }
 
-    getsomething() {
-        this.httpClient.get('http://mob1-apiserver/api/xcl/flowers').subscribe(
-            data => { // API is responding, let's do it
-                console.log(data)
-            },
-            err => {
-                console.log(err)
-            }
-        )
-    }
 }
