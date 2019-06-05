@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Storage} from '@ionic/storage'
 import {DataProvider} from '../providers/data';
 import {Flower} from '../model/Flower';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
     selector: 'app-details',
@@ -14,11 +15,13 @@ export class DetailsPage implements OnInit {
     private route: ActivatedRoute
     public data: DataProvider
     public flower: Flower
+    private httpClient: HttpClient
 
-    constructor(activatedRoute: ActivatedRoute, data: DataProvider) {
+    constructor(activatedRoute: ActivatedRoute, data: DataProvider, httpClient: HttpClient) {
         this.route = activatedRoute
         this.data = data
-        this.flower = new Flower(0,[]);
+        this.httpClient = httpClient
+        this.flower = new Flower(0, []);
     }
 
     ngOnInit() {
@@ -28,4 +31,14 @@ export class DetailsPage implements OnInit {
         })
     }
 
+    getsomething() {
+        this.httpClient.get('http://mob1-apiserver/api/xcl/flowers').subscribe(
+            data => { // API is responding, let's do it
+                console.log(data)
+            },
+            err => {
+                console.log(err)
+            }
+        )
+    }
 }
