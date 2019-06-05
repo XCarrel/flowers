@@ -1,10 +1,7 @@
 import {Flower} from '../model/Flower';
 import {Storage} from '@ionic/storage'
-import {Promise} from 'es6-promise'
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {IonDatetime} from '@ionic/angular';
-import {reject, resolve} from 'q';
 
 @Injectable()
 export class DataProvider {
@@ -22,15 +19,14 @@ export class DataProvider {
         this.storage = storage
         this.httpClient = httpClient
         //this.init()
-        this.loadFromAPI().then(() => {
-            this.loadFromStorage()
-        })
+        this.flowers = []
         this.lastUpdateTime = null
         this.lastUpdateSuccess = false
     }
 
-    public loadFromAPI(): Promise {
-        return new Promise((resolve, reject) => {
+    public loadFromAPI(): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            this.flowers = []
             this.httpClient.get(this.apiurl + '/flowers').subscribe(
                 data => { // API is responding, let's do it
                     this.storage.set('flowers', data).then(() => {
@@ -38,7 +34,7 @@ export class DataProvider {
                         this.lastUpdateTime = new Date()
                         this.storage.set('lastUpdateTime', this.lastUpdateTime).then(() => {
                             console.log('data from API stored')
-                            resolve()
+                            resolve('Ok')
                         })
                     })
                 },
@@ -47,20 +43,19 @@ export class DataProvider {
                         this.lastUpdateTime = value
                     })
                     this.lastUpdateSuccess = false
-                    console.log('Load from API failed with error ' + err)
-                    reject()
+                    console.log('Load from API failed with error ' + err.message)
+                    reject('API call failed')
                 }
             )
         })
     }
 
     // Convert the json format stored in storage to array of Flower objects
-    public loadFromStorage(): Promise {
-        return new Promise((resolve,reject) => {
+    public loadFromStorage(): Promise<string> {
+        return new Promise<string>((resolve,reject) => {
             this.flowers = []
             console.log('loadFromStorage')
             this.storage.get('flowers').then((data) => {
-                console.log(data)
                 data.data.forEach((value) => {
                     var stringnames: string[] = []
                     value.names.forEach((objname) => {
@@ -70,7 +65,11 @@ export class DataProvider {
                     f.size = value.size
                     this.flowers.push(f)
                 })
-                resolve()
+                console.log('loadFromStorage.resolve');
+                resolve('Ok')
+            }).catch(() => {
+                console.log('loadFromStorage.reject');
+                reject('Ko')
             })
         })
     }
