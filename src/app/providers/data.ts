@@ -22,7 +22,7 @@ export class DataProvider {
         //this.init()
         this.loadFromAPI()
         this.loadFromStorage()
-        this.lastUpdateTime = new Date()
+        this.lastUpdateTime = null
         this.lastUpdateSuccess = false
     }
 
@@ -32,10 +32,14 @@ export class DataProvider {
                 this.storage.set('flowers',data).then(() => {
                     this.lastUpdateSuccess = true
                     this.lastUpdateTime = new Date()
-                    console.log ('data from API stored')
+                    this.storage.set('lastUpdateTime',this.lastUpdateTime).then(() => {
+                        console.log ('data from API stored')
+                    })
                 })
             },
             err => {
+                this.storage.get('lastUpdateTime').then((value) => { this.lastUpdateTime=value })
+                this.lastUpdateSuccess = false
                 console.log('Load from API failed with error '+err)
             }
         )
